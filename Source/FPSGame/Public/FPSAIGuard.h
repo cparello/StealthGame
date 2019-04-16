@@ -9,7 +9,7 @@
 UCLASS()
 class FPSGAME_API AFPSAIGuard : public ACharacter
 {
-	GENERATED_BODY()
+GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
@@ -18,6 +18,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	class UPawnSensingComponent* PawnSensingComp;
 
 public:	
 	// Called every frame
