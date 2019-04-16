@@ -24,27 +24,27 @@ public:
 protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-		UStaticMeshComponent* MeshComp;
+	UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-		UBoxComponent* OverlapComp;
+	UBoxComponent* OverlapComp;
 
 	// Marked with ufunction to bind to overlap event
 	UFUNCTION()
-		void OverlapLaunchPad(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OverlapLaunchPad(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	/* Total impulse added to the character on overlap
 	Marked 'EditInstanceOnly' to allow in-level editing of this property per instance. */
 	UPROPERTY(EditInstanceOnly, Category = "LaunchPad")
-		float LaunchStrength;
+	float LaunchStrength;
 
 	/* Angle added on top of actor rotation to launch the character.
 	Marked 'EditInstanceOnly' to allow in-level editing of this property per instance. */
 	UPROPERTY(EditInstanceOnly, Category = "LaunchPad")
-		float LaunchPitchAngle;
+	float LaunchPitchAngle;
 
 	/* Effect to play when activating launch pad */
 	UPROPERTY(EditDefaultsOnly, Category = "LaunchPad")
-		UParticleSystem* ActivateLaunchPadEffect;
+	UParticleSystem* ActivateLaunchPadEffect;
 
 };
