@@ -19,6 +19,13 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
 	void OnMissionCompleted(APawn* InstigatorPawn);
+
+
+	void ObjectiveMissing(APawn* InstigatorPawn);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
+	void OnObjectiveMissing(APawn* InstigatorPawn);
+
 };
 
 

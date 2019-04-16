@@ -6,6 +6,7 @@
 #include "FPSCharacter.h"
 #include "GameFramework/Actor.h"
 #include "FPSGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -18,6 +19,7 @@ AFPSExtractionZone::AFPSExtractionZone()
 	OverlapComp->SetBoxExtent(FVector(20.0f));
 	RootComponent = OverlapComp;
 
+	OverlapComp->bGenerateOverlapEvents = true;
 	OverlapComp->OnComponentBeginOverlap.AddDynamic(this, &AFPSExtractionZone::HandledOverlap);
 
 	DecalComp = CreateDefaultSubobject<UDecalComponent>(TEXT("DecalComp"));
@@ -32,14 +34,27 @@ void AFPSExtractionZone::HandledOverlap(UPrimitiveComponent* OverlappedComponent
 	UE_LOG(LogTemp, Warning, TEXT("Overlapped with extraction!"))
 
 	AFPSCharacter* MyPawn = Cast<AFPSCharacter>(OtherActor);
-	if(MyPawn && MyPawn->bIsCarryingObjective)
+	if (MyPawn == nullptr) { return; }
+
+	if(MyPawn->bIsCarryingObjective)
 	{
 		AFPSGameMode* GM = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
-		if(GM)
+		if (GM)
 		{
 			GM->CompletedMission(MyPawn);
 		}
+	}else
+	{
+		AFPSGameMode* GM = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
+		if (GM)
+		{
+			GM->ObjectiveMissing(MyPawn);
+		}
+		UGameplayStatics::PlaySound2D(this, ObjectiveMissingSound);
 	}
+
+	
 }
+
 
 

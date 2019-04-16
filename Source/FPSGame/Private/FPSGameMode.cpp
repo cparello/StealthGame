@@ -24,7 +24,8 @@ void AFPSGameMode::CompletedMission(APawn* InstigatorPawn)
 	OnMissionCompleted(InstigatorPawn);
 }
 
-// void AFPSGameMode::OnMissionCompleted(APawn* InstigatorPawn)
-// {
-// 
-// }
+void AFPSGameMode::ObjectiveMissing(APawn* InstigatorPawn)
+{
+	OnObjectiveMissing(InstigatorPawn);
+}
+
