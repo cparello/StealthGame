@@ -26,6 +26,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "GameMode")
 	void OnObjectiveMissing(APawn* InstigatorPawn);
 
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spectating")
+	TSubclassOf<AActor> SpectatingViewpointClass;
+
 };
 
 
