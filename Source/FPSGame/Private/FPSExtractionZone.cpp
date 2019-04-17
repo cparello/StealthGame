@@ -41,14 +41,14 @@ void AFPSExtractionZone::HandledOverlap(UPrimitiveComponent* OverlappedComponent
 		AFPSGameMode* GM = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
 		if (GM)
 		{
-			GM->CompletedMission(MyPawn);
+			GM->CompletedMission(MyPawn, true, MyPawn->bIsCarryingObjective);
 		}
 	}else
 	{
 		AFPSGameMode* GM = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());
 		if (GM)
 		{
-			GM->ObjectiveMissing(MyPawn);
+			GM->CompletedMission(MyPawn, true, false);
 		}
 		UGameplayStatics::PlaySound2D(this, ObjectiveMissingSound);
 	}

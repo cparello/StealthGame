@@ -16,7 +16,7 @@ AFPSGameMode::AFPSGameMode()
 	HUDClass = AFPSHUD::StaticClass();
 }
 
-void AFPSGameMode::CompletedMission(APawn* InstigatorPawn)
+void AFPSGameMode::CompletedMission(APawn* InstigatorPawn, bool MissionSuccess, bool IsCarryingObjective)
 {
 	if(InstigatorPawn)
 	{
@@ -43,15 +43,7 @@ void AFPSGameMode::CompletedMission(APawn* InstigatorPawn)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("spectatng viewpoint class is null"))
 		}
-
-		
 		
 	}
-	OnMissionCompleted(InstigatorPawn);	
+	OnMissionCompleted(InstigatorPawn, MissionSuccess, IsCarryingObjective);
 }
-
-void AFPSGameMode::ObjectiveMissing(APawn* InstigatorPawn)
-{
-	OnObjectiveMissing(InstigatorPawn);
-}
-
