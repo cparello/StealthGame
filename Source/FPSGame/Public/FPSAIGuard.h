@@ -23,10 +23,19 @@ protected:
 	class UPawnSensingComponent* PawnSensingComp;
 
 	UFUNCTION()
+	void ResetOrientation();
+
+	FTimerHandle TimerHandle_ResetOrientation;
+
+	FRotator OriginalRotation;
+
+private:
+	UFUNCTION()
 	void OnPawnSeen(APawn* SeenPawn);
 
 	UFUNCTION()
 	void OnNoiseHeard(APawn* PawnInstigator, const FVector& Location, float Volume);
+
 
 	
 
