@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/Actor.h"
 #include "FPSGameMode.h"
+#include "AI/Navigation/NavigationSystem.h"
 
 
 // Sets default values
@@ -16,7 +17,6 @@ AFPSAIGuard::AFPSAIGuard()
 	PrimaryActorTick.bCanEverTick = true;
 
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
-
 	
 	GuardState = EAIState::Idle;
 }
@@ -27,10 +27,13 @@ void AFPSAIGuard::BeginPlay()
 {
 	Super::BeginPlay();
 
+	OriginalRotation = GetActorRotation();
+
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFPSAIGuard::OnPawnSeen);
 
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnNoiseHeard);
-	
+
+	if (bPatrol) MoveToNextPatrolPoint();
 }
 
 void AFPSAIGuard::ResetOrientation()
@@ -38,6 +41,12 @@ void AFPSAIGuard::ResetOrientation()
 	SetActorRotation(OriginalRotation);
 
 	SetGuardState(EAIState::Idle);
+
+	// Stopped investigating...if we are a patrolling pawn, pick a new patrol point to move to
+	if (bPatrol)
+	{
+		MoveToNextPatrolPoint();
+	}
 }
 
 void AFPSAIGuard::SetGuardState(EAIState NewState)
@@ -46,6 +55,19 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
 	GuardState = NewState;
 
 	OnStateChanged(GuardState);
+}
+
+void AFPSAIGuard::MoveToNextPatrolPoint()
+{
+	if(CurrentPatrolPoint == nullptr || CurrentPatrolPoint == SecondPatrolPoint)
+	{
+		CurrentPatrolPoint = FirstPatrolPoint;
+	}else
+	{
+		CurrentPatrolPoint = SecondPatrolPoint;
+	}
+
+	UNavigationSystem::SimpleMoveToActor(GetController(), CurrentPatrolPoint);
 }
 
 void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
@@ -64,6 +86,9 @@ void AFPSAIGuard::OnPawnSeen(APawn* SeenPawn)
 	}
 
 	SetGuardState(EAIState::Alerted);
+
+	AController* Controller = GetController();
+	if (Controller) Controller->StopMovement();
 }
 
 void AFPSAIGuard::OnNoiseHeard(APawn* PawnInstigator, const FVector & Location, float Volume)
@@ -90,6 +115,8 @@ void AFPSAIGuard::OnNoiseHeard(APawn* PawnInstigator, const FVector & Location, 
 	
 	SetGuardState(EAIState::Suspicious);
 
+	AController* Controller = GetController();
+	if (Controller) Controller->StopMovement();
 }
 
 // Called every frame
@@ -97,6 +124,13 @@ void AFPSAIGuard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CurrentPatrolPoint)
+	{
+		FVector Delta = GetActorLocation() - CurrentPatrolPoint->GetActorLocation();
+		float DistanceToGoal = Delta.Size();
+
+		if (DistanceToGoal < 50) MoveToNextPatrolPoint();
+	}
 }
 
 // Called to bind functionality to input
