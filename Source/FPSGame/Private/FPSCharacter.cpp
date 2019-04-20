@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/PawnNoiseEmitterComponent.h"
 #include "Components/SceneComponent.h"
+#include "UnrealNetwork.h"
 
 
 AFPSCharacter::AFPSCharacter()
@@ -134,11 +135,11 @@ void AFPSCharacter::MoveRight(float Value)
 	}
 }
 
-//void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
-//{
-//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-//	DOREPLIFETIME(AFPSCharacter, bIsCarryingObjective);
+	DOREPLIFETIME(AFPSCharacter, bIsCarryingObjective);
 
 	//DOREPLIFETIME_CONDITION(AFPSCharacter, bIsCarryingObjective, COND_OwnerOnly);
-//}
+}
